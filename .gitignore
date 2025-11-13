@@ -1,0 +1,16 @@
+# Fisiere si foldere generate de Vivado care nu trebuie urmarite de Git
+*.jou
+*.log
+*.str
+*.backup
+*.xpr.bak
+*.xml
+*.pb
+
+# Foldere mari de sinteza/implementare
+/runs/
+/partea1.cache/
+/partea1.ip_user_files/
+/partea1.hw/
+/partea1.sim/
+/vivado.history
