@@ -1,17 +1,5 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Design Name: Decodor de instructiuni SPI (FSM 2 faze)
-// Module Name: instr_dcd
-// Description: 
-//  - FSM cu 2 st?ri: SETUP (decodare instruc?iune) ?i DATA (transfer efectiv)
-//  - Instruc?iunea are structura: 
-//      bit 7 = Read/Write (1=Write, 0=Read)
-//      bit 6 = High/Low (zona din registru [15:8] / [7:0])
-//      bit [5:0] = Adresa registrului
-//////////////////////////////////////////////////////////////////////////////////
+
 
 module instr_dcd (
     input clk,
@@ -27,11 +15,11 @@ module instr_dcd (
     output high_low   // <-- semnal expus pentru debug/testbench
 );
 
-    // --- FSM States ---
+    // FSM States
     localparam [1:0] SETUP = 2'b00, DATA = 2'b01;
     reg [1:0] current_state, next_state;
 
-    // --- Registre interne ---
+    //  Registre interne 
     reg [7:0] instr_reg;
     reg [7:0] data_write_reg;
     reg [7:0] data_out_reg;
@@ -39,21 +27,20 @@ module instr_dcd (
     reg instr_highlow;
     reg [5:0] instr_addr;
 
-    // --- Semnale active WRITE/READ ---
+    // Semnale active WRITE/READ 
     reg write_active;
     reg read_active;
 
-    // --- Ie?iri ---
+    //iesiri
     assign write = write_active;
     assign read  = read_active;
     assign addr  = instr_addr;
     assign data_write = data_write_reg;
     assign data_out   = data_out_reg;
-    assign high_low   = instr_highlow;   // <-- ie?ire pentru debug
-
-    // ==========================================================
+    assign high_low   = instr_highlow;  
+   
     // Combinatoriu: FSM next state
-    // ==========================================================
+
     always @(*) begin
         next_state = current_state;
         case (current_state)
@@ -63,9 +50,7 @@ module instr_dcd (
         endcase
     end
 
-    // ==========================================================
-    // Secven?ial: FSM + captur? instruc?iune + transfer date
-    // ==========================================================
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             current_state    <= SETUP;
@@ -80,7 +65,6 @@ module instr_dcd (
         end else begin
             current_state <= next_state;
 
-            // Captur?m instruc?iunea în SETUP
             if (current_state == SETUP && byte_sync) begin
                 instr_reg      <= data_in;
                 instr_rw       <= data_in[7];
@@ -88,7 +72,7 @@ module instr_dcd (
                 instr_addr     <= data_in[5:0];
             end
 
-            // Transferul efectiv în DATA phase
+         
             if (current_state == DATA && byte_sync) begin
                 if (instr_rw)
                     data_write_reg <= data_in;  // WRITE
