@@ -17,6 +17,7 @@ module instr_dcd_tb;
     wire [5:0] addr;
     wire [7:0] data_write;
     wire [7:0] data_read;
+    wire high_low; // NOU: Semnal pentru bitul High/Low din instruc?iune
     
     //-------------------------------------------------------------------------
     // 1. Instan?ierea Decodorului de Instruc?iuni (DUT)
@@ -31,7 +32,8 @@ module instr_dcd_tb;
         .write(write),
         .addr(addr),
         .data_read(data_read),
-        .data_write(data_write)
+        .data_write(data_write),
+        .high_low(high_low) // NOU: Conectarea portului
     );
 
     //-------------------------------------------------------------------------
@@ -82,7 +84,7 @@ module instr_dcd_tb;
             
             // Asteptare pentru propagarea adresei
             #1; 
-            $display("[Ciclul 1] Stare: S_SETUP -> S_DATA. Adresa: %h. Write/Read: %b/%b", addr, write, read);
+            $display("[Ciclul 1] Stare: S_SETUP -> S_DATA. Adresa: %h. Write/Read: %b/%b. High/Low: %b", addr, write, read, high_low);
 
             // Ciclu 2: Date (S_DATA)
             data_in = data;
@@ -107,7 +109,7 @@ module instr_dcd_tb;
             pulse_sync;
             
             #1; 
-            $display("[Ciclul 1] Stare: S_SETUP -> S_DATA. Adresa: %h. Write/Read: %b/%b", addr, write, read);
+            $display("[Ciclul 1] Stare: S_SETUP -> S_DATA. Adresa: %h. Write/Read: %b/%b. High/Low: %b", addr, write, read, high_low);
 
             // Ciclu 2: Dummy Read (S_DATA)
             data_in = 8'hFF; // Dummy byte trimis de master in timpul citirii
