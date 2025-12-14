@@ -56,8 +56,7 @@ end
 
 assign byte_sync_pulse = sync2_byte_sync & ~sync2_prev;
 
-// ----- Conexiunea a fost restabilita (pwm_en vine din regs) -----
-// assign pwm_en = 1'b1; // Comentat/Eliminat codul de debugging
+// assign pwm_en = 1'b1; 
 
 spi_bridge i_spi_bridge (
     .clk(clk),
