@@ -23,26 +23,24 @@ wire en;
 wire count_reset;
 wire upnotdown;
 wire[7:0] prescale;
-// A fost redenumit, acum folosim numele standard:
-//wire pwm_en; 
 wire pwm_en_force = 1'b1;
 wire[7:0] functions;
 wire[15:0] compare1;
 wire[15:0] compare2;
 
-// Semnale pentru Sincronizarea Domeniilor de Ceas (CDC)
+// sincornizare
 reg sync1_byte_sync;
 reg sync2_byte_sync;
-wire sync_byte_sync; // Pulsul sincronizat, gata de utilizare in instr_dcd
+wire sync_byte_sync; // Pulsul sincronizat
 
-// Sincronizare pe 2 Flops (Transfer SCLK -> CLK)
+// Sincronizare pe 2 Flops 
 reg sync2_prev;
 
 
 always @(posedge clk or negedge rst_n) begin
  if (write)
 $display("WRITE-> addr=%02h data=%02h | period=%d compare1=%d en=%b pwm_en=%b functions=%b",
-                 addr, data_write, period, compare1, en, pwm_en, functions);
+         addr, data_write, period, compare1, en, pwm_en, functions);//debugging  consola
     if (!rst_n) begin
         sync1_byte_sync <= 0;
         sync2_byte_sync <= 0;
@@ -73,7 +71,7 @@ spi_bridge i_spi_bridge (
 instr_dcd i_instr_dcd (
     .clk(clk),
     .rst_n(rst_n),
-    .byte_sync(byte_sync_pulse), // FIX: Folosim semnalul sincronizat
+    .byte_sync(byte_sync_pulse), //  Folosim semnalul sincronizat
     .data_in(data_in),
     .data_out(data_out),
     .read(read),
@@ -97,7 +95,7 @@ regs i_regs (
     .count_reset(count_reset),
     .upnotdown(upnotdown),
     .prescale(prescale),
-    .pwm_en(pwm_en), // Renumirea temporara a fost eliminata
+    .pwm_en(pwm_en), 
     .functions(functions),
     .compare1(compare1),
     .compare2(compare2)
