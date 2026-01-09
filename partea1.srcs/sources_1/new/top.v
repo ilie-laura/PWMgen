@@ -36,6 +36,8 @@ wire sync_byte_sync; // Pulsul sincronizat
 // Sincronizare pe 2 Flops 
 reg sync2_prev;
 
+wire byte_sync_pulse; 
+wire pwm_en;
 
 always @(posedge clk or negedge rst_n) begin
  if (write)
@@ -115,7 +117,7 @@ counter i_counter (
 pwm_gen i_pwm_gen (
     .clk(clk),
     .rst_n(rst_n),
-    .pwm_en(pwm_en_force),
+    .pwm_en(pwm_en),
     .period(period),
     .functions(functions),
     .compare1(compare1),
